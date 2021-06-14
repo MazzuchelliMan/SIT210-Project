@@ -1,0 +1,32 @@
+int redLed = D6; // Red LED
+int led = D7;  // The on-board LED
+int tempSensor = A0; // Temperature Sensor
+int temp;
+int celciusTemp;
+
+void setup() {
+  pinMode(redLed, OUTPUT);
+  pinMode(led, OUTPUT);
+  pinMode(A0, INPUT);
+}
+
+void loop() {
+  digitalWrite(led, HIGH);   // Signals the process is running
+  
+  temp = analogRead(tempSensor); // Reads temperature and stores in local variable
+  celciusTemp = (((temp * 3.3) / 4095) - 0.5) * 100; // Convert reading into degree Celsius
+
+  Particle.publish("temp", String(temp), PRIVATE);
+  delay(1000);               // Wait for 1 second
+
+  // This loop controls the warning LED
+  if (temp > 15) {
+        digitalWrite(redLed,HIGH);
+    }
+  else {
+        digitalWrite(redLed,LOW);
+    }
+  
+  digitalWrite(led, LOW);    // Signals the process iteration has completed
+}
+
